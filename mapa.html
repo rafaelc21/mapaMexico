@@ -1,0 +1,152 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.js"></script>
+
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/mapdata/countries/mx/mx-all.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+
+    <style>
+        #mapa-container {
+            height: 800px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .loading {
+            margin-top: 10em;
+            text-align: center;
+            color: gray;
+        }
+     </style>
+    
+</head>
+
+<body>
+    <div id="mapa-container"></div>
+
+</body>
+<script>
+    series_data = data;
+    // Prepare demo data
+    // Data is joined to map using value of 'hc-key' property by default.
+    // See API docs for 'joinBy' for more info on linking data and map.
+    var data = [
+        ['mx-3622', 10], ['mx-bc', 11], ['mx-bs', 12], ['mx-so', 13],
+        ['mx-cl', 14], ['mx-na', 15], ['mx-cm', 16], ['mx-qr', 17],
+        ['mx-mx', 18], ['mx-mo', 19], ['mx-df', 20], ['mx-qt', 21],
+        ['mx-tb', 22], ['mx-cs', 23], ['mx-nl', 24], ['mx-si', 25],
+        ['mx-ch', 26], ['mx-ve', 27], ['mx-za', 28], ['mx-ag', 29],
+        ['mx-ja', 30], ['mx-mi', 31], ['mx-oa', 32], ['mx-pu', 33],
+        ['mx-gr', 34], ['mx-tl', 35], ['mx-tm', 36], ['mx-co', 37],
+        ['mx-yu', 38], ['mx-dg', 39], ['mx-gj', 40], ['mx-sl', 41],
+        ['mx-hg', 42]
+    ];
+    var series_data = [
+        ['mx-3622', 420], ['mx-bc', 11], ['mx-bs', 12], ['mx-so', 13],
+        ['mx-cl', 380], ['mx-na', 15], ['mx-cm', 16], ['mx-qr', 17],
+        ['mx-mx', 100], ['mx-mo', 19], ['mx-df', 20], ['mx-qt', 21],
+        ['mx-tb', 150], ['mx-cs', 23], ['mx-nl', 24], ['mx-si', 25],
+        ['mx-ch', 50], ['mx-ve', 27], ['mx-za', 28], ['mx-ag', 29],
+        ['mx-ja', 563], ['mx-mi', 31], ['mx-oa', 32], ['mx-pu', 33],
+        ['mx-gr', 34], ['mx-tl', 35], ['mx-tm', 36], ['mx-co', 37],
+        ['mx-yu', 78], ['mx-dg', 39], ['mx-gj', 40], ['mx-sl', 41],
+        ['mx-hg', 220]
+    ];
+
+    Highcharts.setOptions({
+        lang: {
+            viewFullscreen:'Pantalla completa',
+            viewData:'Ver datos',
+            downloadCSV:'Descargar en CSV',
+            downloadXLS:'Descargar en XLS',
+            printChart: 'Imprimir gráfico',
+            downloadPNG: 'Descargar como PNG',
+            downloadJPEG: 'Descargar como JPEG',
+            downloadPDF: 'Descargar como PDF',
+            downloadSVG: 'Descargar como SVG',
+            exportButtonTitle: 'Exportar gráfico',
+            loading: 'Cargando...'
+        }
+    });
+
+
+    // Create the chart
+    Highcharts.mapChart('mapa-container', {
+      chart: {
+          map: 'countries/mx/mx-all'
+      },
+      title: {
+          text: 'Consulta por estado'
+      },
+      subtitle: {
+          text: 'Beneficiarios - Inversión Social'
+      },
+      mapNavigation: {
+          enabled: true,
+          buttonOptions: {
+              verticalAlign: 'top'
+          }
+      },
+
+      colorAxis: {
+          min: 0
+      },
+
+      series: [{
+          data: series_data,
+          name: 'Población',
+          states: {
+              hover: {
+                  color: '#BADA55'
+              }
+          },
+          dataLabels: {
+              enabled: true,
+              format: '{point.name}'
+          }
+      }],
+      colorAxis: {
+        min: 0,
+        stops: [
+            [0, '#FFFFFF'], // Color en el extremo inferior de la barra
+            [0.5, '#CACACA'], // Color en el punto medio de la barra
+            [1, '#003366'] // Color en el extremo superior de la barra
+        ],
+        max: 800 // Valor máximo del rango de colores
+       },
+      plotOptions: {
+                series: {   
+                    events: {
+                        click: function (e) {
+                            const text = '<b>Clicked</b><br>Series: ' + this.name +
+                                    '<br>Point: ' + e.point.name + ' (' + e.point.value + '/km²)';
+                            if (!this.chart.clickLabel) {
+                                this.chart.clickLabel = this.chart.renderer
+                                    .label(text, 0, 250)
+                                    .css({
+                                        width: '200px'
+                                    })
+                                    .add();
+                            } else {
+                                this.chart.clickLabel.attr({
+                                    text: text
+                                });
+                            }
+                        }
+                    }
+                }
+            }        
+    });
+
+
+    </script>
+
+</html>
